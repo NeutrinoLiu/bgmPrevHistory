@@ -94,8 +94,7 @@ function drawRecentDiv(inner) {
 
 function initDraw(){
     const text = '<h2 class="subtitle" id="slideIcon" style="font-size:1em; margin-bottom:0px;">' + GREET_fold + '</h2>';
-    // const indicator = '<table><tr><td width="%5"></td><td width="20%">' + icon + '</td><td width="70%>' + text + '</td></tr></table>';
-    const INIT_INNER = '<div id="historyList" style="margin-top:10px;" hidden><h2 id="history_loading" style="font-size:1em;">loading...</h2></div>';
+    const INIT_INNER = '<div id="historyList" style="margin-top:10px;" hidden><h2 id="history_loading" style="font-size:1.2em; margin-bottom:0px">loading...</h2></div>';
     const father = $(ANCHOR);
     father.append('<div class="subject_tag_section inner" id="historyWrapper" style="margin-top:8px;">' + text + INIT_INNER + '</div>');
 }
