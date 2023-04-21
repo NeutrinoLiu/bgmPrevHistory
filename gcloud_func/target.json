@@ -1,0 +1,10 @@
+{
+	"group_targets": {
+		"groups": ["dev", "a", "fillgrids","boring", "latest"],
+	 	"max_page": 5
+ 	},
+ 	"subject_targets" : {
+ 		"offset_start": -29,
+ 		"offset_end" : 0
+ 	}
+}
