@@ -93,6 +93,7 @@ def mainGroup(myCollection):
             return path.split("/")[-1]
         dom = BS(res.content,features="html.parser")
         topics = dom.select('tr.topic')
+        print('parsepage:' + res.url)
         if topics == None or len(topics) == 0:
             return False
         for t in topics:
@@ -101,7 +102,7 @@ def mainGroup(myCollection):
             title = subject.text
             author = t.attrs['data-item-user']
             lastpost = t.find('td', {"class":'lastpost'}).text
-            myState.addUpdates(ReplaceOne(
+            myState.addUpdates(UpdateOne(
                 {
                     "id": int(id),
                 },
@@ -123,7 +124,7 @@ def mainGroup(myCollection):
         URL_PREFIX = "https://bgm.tv/group/" + TAG + "/forum?page="
 
         myState = State()
-        all_pages = [URL_PREFIX + str(tid) for tid in range(MAX_PAGE)]
+        all_pages = [URL_PREFIX + str(tid + 1) for tid in range(MAX_PAGE)]
 
         while len(all_pages) > 0:
             myState.resetFailedURL()
@@ -179,6 +180,13 @@ def mainSubject(myCollection):
     CATEGORY = "subject"
 
     # util functions
+    def extractWordsOnly(raw):
+        new = raw.replace('\n', ' ')
+        new = new.replace('\t', ' ')
+        new = ' '.join(new.split())
+        if new == '':
+            new = ' '
+        return new
     def extract(res, myState: State):
         # parser
         def getId(path):
@@ -186,10 +194,17 @@ def mainSubject(myCollection):
         # getTag
 
         dom = BS(res.content,features="html.parser")
+
         header = dom.find(id='header')
         if header == None:
             return False
         tag = dom.find(id='subject_inner_info').find('a').attrs['href']
+        
+        item_list = dom.select('div.topic_content')
+        if len(item_list) == 0:
+            return False
+        content = extractWordsOnly(item_list[0].text)
+
         tag = getId(tag)
         id = getId(res.url)
         title = header.text
@@ -209,6 +224,7 @@ def mainSubject(myCollection):
                 "title": title,
                 "poster": author,
                 "lastpost": dateFormat(post_time),
+                "content": content,
             }, upsert=True))
         
         return True
